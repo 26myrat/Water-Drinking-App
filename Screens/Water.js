@@ -1,8 +1,40 @@
 import React from 'react'
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native'
+import {Text, View, TouchableOpacity, StyleSheet, TextInput, Image} from 'react-native'
+import db from "../Config"
 export default class WaterScreen extends React.Component{
+  constructor (){
+    super()
+    this.state= {totalWater:0, waterCount:0}
+  }
     submitwater=()=>{
-
+      var id = '';
+      if (roll_no <= 9) {
+        id = '0' + roll_no;
+      } else {
+        id = roll_no;
+      }
+  
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+  
+      var yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = '0' + dd;
+      }
+      if (mm < 10) {
+        mm = '0' + mm;
+      }
+  
+      today = dd + '-' + mm + '-' + yyyy;
+     alert(today)
+  
+      let refPath = 'waterCount/';
+      let classRef = db.ref(refPath);
+      classRef.update({
+        waterCount: this.state.waterCount,
+        totalWater: this.state.totalWater
+      })
     }
   render(){
     return(
@@ -17,14 +49,14 @@ export default class WaterScreen extends React.Component{
           <TextInput 
             style={styles.inputBox}
             placeholder="Total Water Requirement"
-            onChangeText= {(text)=>{this.setState({title: text})}}
+            onChangeText= {(text)=>{this.setState({totalWater: text})}}
             value={this.state.title}/>
           </View>
           <View style={styles.inputView}>
           <TextInput 
             style={styles.inputBox}
             placeholder="Water Count"
-            onChangeText= {(text)=>{this.setState({author: text})}}
+            onChangeText= {(text)=>{this.setState({waterCount: text})}}
             value={this.state.author}/>
           
           </View>
