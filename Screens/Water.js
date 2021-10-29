@@ -1,19 +1,30 @@
 import React from 'react'
-import {Text, View, TouchableOpacity, StyleSheet, TextInput, Image} from 'react-native'
+import {Text, View, TouchableOpacity, StyleSheet, TextInput, Image, Alert} from 'react-native'
 import db from "../Config"
 export default class WaterScreen extends React.Component{
   constructor (){
     super()
-    this.state= {totalWater:0, waterCount:0}
+    this.state= {totalWater:0, waterCount:0, editText:true}
+  }
+  componentDidMount(){
+    this.getWaterCount()
+  }
+  getWaterCount =()=>{
+    let refPath = 'waterCount/';
+      let classRef = db.ref(refPath);
+      classRef.on("value",(data)=>{
+       let wc_data = data.val()
+       this.setState({totalWater:wc_data.totalWater, waterCount:wc_data.waterCount})
+       let more_water = wc_data.totalWater - wc_data.waterCount
+       
+       if(more_water>0)
+       {
+        Alert.alert("you need "+more_water +"gallons of water more for today ")
+       }
+      })
   }
     submitwater=()=>{
-      var id = '';
-      if (roll_no <= 9) {
-        id = '0' + roll_no;
-      } else {
-        id = roll_no;
-      }
-  
+     
       var today = new Date();
       var dd = today.getDate();
       var mm = today.getMonth() + 1;
@@ -27,7 +38,7 @@ export default class WaterScreen extends React.Component{
       }
   
       today = dd + '-' + mm + '-' + yyyy;
-     alert(today)
+     
   
       let refPath = 'waterCount/';
       let classRef = db.ref(refPath);
@@ -50,14 +61,15 @@ export default class WaterScreen extends React.Component{
             style={styles.inputBox}
             placeholder="Total Water Requirement"
             onChangeText= {(text)=>{this.setState({totalWater: text})}}
-            value={this.state.title}/>
+            value={this.state.totalWater}
+            edita/>
           </View>
           <View style={styles.inputView}>
           <TextInput 
             style={styles.inputBox}
             placeholder="Water Count"
             onChangeText= {(text)=>{this.setState({waterCount: text})}}
-            value={this.state.author}/>
+            value={this.state.waterCount}/>
           
           </View>
           
